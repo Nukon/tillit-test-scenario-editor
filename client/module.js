@@ -1,93 +1,125 @@
-'use strict';
-
+'use strict'; 
 var domify = require('min-dom/lib/domify');
-var ace = require('brace');
-var swal = require('sweetalert');
+
+let JSONEditor = require('@json-editor/json-editor/dist/jsoneditor')
 
 var CamundaPropertiesProvider = require('bpmn-js-properties-panel/lib/provider/camunda/CamundaPropertiesProvider');
+var entryFactory = require('bpmn-js-properties-panel/lib/factory/EntryFactory');
+var is = require('bpmn-js/lib/util/ModelUtil').is;
 
-function AceScriptPluginProvider(eventBus, elementRegistry, bpmnFactory, elementTemplates, translate) {
-    var camunda = new CamundaPropertiesProvider(eventBus, bpmnFactory, elementRegistry, elementTemplates, translate);
+function TestScenarioPluginProvider(eventBus, elementRegistry, bpmnFactory, elementTemplates, translate) {
+   var camunda = new CamundaPropertiesProvider(eventBus, bpmnFactory, elementRegistry, elementTemplates, translate);
+    var testScenarioTab = null;
+    var editor = null;
+    var processScenarios = [];
     this.getTabs = function (element) {
-        // debugger;
         var array = camunda.getTabs(element);
-        // return array;
-        if (document.querySelector('.ace_editor') == null) {
-            var formIndex;
-            var formsTab = array.filter(function (item, index) {
-                if (item.id == 'general') {
-                    formIndex = index;
-                    return true;
-                }
-            });
-            if (formsTab.length > 0) {
-                var newFormsTab = this.getGeneralTab(formsTab[0]);
-                if (newFormsTab != null)
-                    array[formIndex] = newFormsTab;
-            }
+        if (is(element, 'bpmn:Process')) { 
+           var newGeneralTab = this.getGeneralTab(array[0], element);
+           array[0] = newGeneralTab;
+
         }
         return array;
     };
 }
 
 
-AceScriptPluginProvider.prototype.getGeneralTab = function (generalTab) {
-    var self = this;
+TestScenarioPluginProvider.prototype.getGeneralTab = function (generalTab, element) {
+  var self = this;  
+      var lastgroup = generalTab.groups.length;
+      var entries = [];
+     
+    /* margin-top: 17px; */
+    
+    
+     entries.push({
+          html: "<button id='open-editor' data-action='openEditor' style='width:200px;display: inline;'>Test Scenarios</button>",
+          id: "open-test-scenarios",
+          canClear: function() { return false},
+          openEditor: function (element, node) {
+              self.openEditor(element);
+          }
+      });
 
-    var detailsIndex = generalTab.groups.findIndex((t) => t.id === 'details');
-    var scriptIndex = generalTab.groups[detailsIndex].entries.findIndex((t) => t.id === 'script-implementation');
-    if (scriptIndex > -1) {
-        generalTab.groups[detailsIndex].entries.splice(2, 0, {
-            html: "<button id='preview-button' data-action='openEditor'>Expand Editor</button>",
-            id: "script-expand-editor-button",
-            openEditor: function (element, node) {
-                self.openEditor(generalTab.groups[detailsIndex].entries[scriptIndex]);
-            }
-        });
-    }
+      var group = {
+        id: "test-scenarios-group",
+        label: "Test Scenarios",
+        entries: entries
+      }
 
-    return generalTab;
+      generalTab.groups.push(group);
+  
+
+  return generalTab;
 };
 
-AceScriptPluginProvider.prototype.openEditor = function (scriptEntry) {
-    var editorSource = '<div width="100%"><div id="full-editor" style="height: 100%"></div></div>';
-    var domHtml = domify(editorSource);
-    var editor;
-    swal({
-        text: "Script Editor",
-        content: domHtml
-    }).then(() => {
-
-            var scriptValue = editor.getSession().getValue();
-            var scriptElement = document.querySelector('#cam-script-val');
-            scriptElement.value = scriptValue;
-            var e = document.createEvent('HTMLEvents');
-            e.initEvent('input', true, true);
-            scriptElement.dispatchEvent(e);
-            document.querySelector('.swal-overlay').removeChild(document.querySelector('.swal-modal'));
-        }
-    );
-
-    setTimeout(() => {
-        var m = document.querySelector('.swal-modal');
-        m.style.width = '90%';
-        m.style.height = '80%';
-        m.style.maxHeight = '650px';
-        var height = window.getComputedStyle(m).height;
-        document.querySelector('#full-editor').style.height = height;
-        editor = ace.edit("full-editor");
-        editor.getSession().setValue(document.querySelector('#cam-script-val').value);
-    }, 1);
+TestScenarioPluginProvider.prototype.openEditor = function (element) {
+  var editorSource = '<div width="100%"><div id="jsoneditor_container" style="height: 100%"></div></div>';
+  var domHtml = domify(editorSource);
+  var editor;
+  swal({
+      text: "Script Editor",
+      content: domHtml
+  }).then(() => { 
+          document.querySelector('.swal-overlay').removeChild(document.querySelector('.swal-modal'));
+      }
+  );
+      var that = this;
+  setTimeout(() => {
+      that.renderJsonEditor(element);
+      var m = document.querySelector('.swal-modal');
+      m.style.width = '90%';
+      m.style.height = '80%';
+      m.style.maxHeight = '650px'; 
+  }, 1);
 
 };
 
-AceScriptEditorPlugin.$inject = ['eventBus', 'elementRegistry', 'bpmnFactory', 'elementTemplates'];
 
-function AceScriptEditorPlugin() {
+TestScenarioPluginProvider.prototype.renderJsonEditor = function(element) {
+  console.log('rendering');
+  var that = this;
+  var jsoneditor_container = document.getElementById('jsoneditor_container');
+  if (jsoneditor_container != null) { 
+  var options = {  
+    iconlib: "fontawesome5",
+    theme: 'barebones',
+    schema: require('./schema.json')
+  };
+  
+  debugger;
+  var bo = element.businessObject;          
+  this.editor = new JSONEditor(jsoneditor_container, options);
+  if (bo.extensionElements == null || !bo.extensionElements.get('values').some((f=>f.$type === 'nukon:TestScenario'))) {    
+    this.editor.testScenarioModel = bo.$model.create('nukon:TestScenario', { textFormat: 'text/x-comments' });
+    this.editor.testScenarioModel.data = '[]';
+    bo.flowElements.push(this.editor.testScenarioModel);
+    // bo.extensionElements = bo.extensionElements || bo.$model.create('bpmn:ExtensionElements');
+    // bo.extensionElements.get('values').push(this.editor.testScenarioModel);    
+  } else {
+    this.editor.testScenarioModel = bo.extensionElements.get('values').filter((f=>f.$type === 'nukon:TestScenario'))[0];
+  }
+  
+      
+  this.editor.setValue(JSON.parse(this.editor.testScenarioModel.data));
+  
+  this.editor.on('change',function() {    
+    this.testScenarioModel.data = JSON.stringify(this.getValue());
+    console.log(JSON.stringify(this.getValue()))
+    
+  });
+
+
+}
+
+}
+TestScenarioPlugin.$inject = ['eventBus', 'elementRegistry', 'bpmnFactory', 'elementTemplates'];
+
+function TestScenarioPlugin() {
 
 }
 export default {
-    __init__: ['aceScriptEditorPlugin'],
-    propertiesProvider: ['type', AceScriptPluginProvider],
-    aceScriptEditorPlugin: ['type', AceScriptEditorPlugin]
+    __init__: ['testScenarioPlugin'],
+    propertiesProvider: ['type', TestScenarioPluginProvider],
+    testScenarioPlugin: ['type', TestScenarioPlugin]
 };

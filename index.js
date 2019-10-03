@@ -1,6 +1,8 @@
 'use strict';
 
 module.exports = {
-  name: 'TilliT Ace Editor and Form Fields Properties',
-  script: './client/client-bundle.js'
+  name: 'TilliT Test Scenario Editor',
+  script: './client/client-bundle.js',
+  style: './client/client.css',
+
 };

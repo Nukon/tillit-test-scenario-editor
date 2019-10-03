@@ -1,0 +1,143 @@
+{
+  "type": "array",
+  "format": "tabs",
+  "title": "Scenario",
+  "itemTitle": "scenarioName",
+  "items": {
+    "title": "Scenario",
+    "type": "object",
+    "properties": {
+      "scenarioName": {
+        "title": "Name",
+        "type": "string"
+      },
+      "processStart": {
+        "title": "Process Start",
+        "type": "object",
+        "properties": {
+          "type": {
+            "title": "Trigger Type",
+            "type": "string",
+            "enum":["Message",
+              "Form",
+              "SubProcess",
+              "None"]
+          },
+          "key": {
+            "title": "Trigger Key",
+            "type": "string"
+          },
+          "requiredOutputValues": {
+            "type": "array",
+            "title": "Output values",
+            "format": "table",
+            "items": {
+              "type": "object",
+              "properties": {
+                "variableName": {
+                  "type":"string",
+                  "title": "Variable Name"
+                },
+                "value": {
+                  "type":"string",
+                  "title": "Value"
+                },
+                "type": {
+                  "type":"string",
+                  "title": "Variable Type"
+                }
+              }
+            }
+          }
+        }
+      },
+      "userTasks": {
+        "title": "Activities",
+        "type": "array",
+        "format": "tabs",
+        "items": {
+          "type": "object",
+          "title": "Activities",
+          "properties": {
+            "type": {
+              "type": "string",
+              "title": "Activity Type",
+              "enum": ["User Task", "Service Task"]
+            },
+            "name": {
+              "type": "string",
+              "title": "Name"
+            },
+            "requiredOutputValues": {
+              "type": "array",
+              "format": "table",
+              "title": "Output variables",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "variableName": {
+                    "type":"string",
+                    "title": "Variable Name"
+                  },
+                  "value": {
+                    "type":"string",
+                    "title": "Value"
+                  },
+                  "type": {
+                    "type":"string",
+                    "title": "Variable Type"
+                  }
+                }
+              }
+              ,
+              "requiredInputValues": {
+                "type": "array",
+                "format": "table",
+                "title": "Expected input variables",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "variableName": {
+                      "type":"string",
+                      "title": "Variable Name"
+                    },
+                    "value": {
+                      "type":"string",
+                      "title": "Value"
+                    },
+                    "type": {
+                      "type":"string",
+                      "title": "Variable Type"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "endOfProcessVariables": {
+        "type": "array",
+        "format": "table",
+        "title": "End of Process variables",
+        "items": {
+          "type": "object",
+          "properties": {
+            "variableName": {
+              "type":"string",
+              "title": "Variable Name"
+            },
+            "value": {
+              "type":"string",
+              "title": "Value"
+            },
+            "type": {
+              "type":"string",
+              "title": "Variable Type"
+            }
+          }
+        }
+      }
+    }
+  }
+}

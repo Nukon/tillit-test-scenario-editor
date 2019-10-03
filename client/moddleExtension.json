@@ -1,0 +1,25 @@
+{
+    "name": "TestScenarios",
+    "uri": "http://nukon.com/schema/bpmn/test-scenarios",
+    "prefix": "nukon",
+    "xml": {
+      "tagAlias": "lowerCase"
+    },
+    "types": [
+      {
+        "name": "TestScenario",
+        "extends": [
+          "bpmn:Activity"
+        ],
+        "properties": [
+          {
+            "name": "data",
+            "isBody": true,
+            "type": "String"
+          }
+        ]
+      }
+    ],
+    "emumerations": [],
+    "associations": []
+  }
