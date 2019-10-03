@@ -92,10 +92,9 @@ TestScenarioPluginProvider.prototype.renderJsonEditor = function(element) {
   this.editor = new JSONEditor(jsoneditor_container, options);
   if (bo.extensionElements == null || !bo.extensionElements.get('values').some((f=>f.$type === 'nukon:TestScenario'))) {    
     this.editor.testScenarioModel = bo.$model.create('nukon:TestScenario', { textFormat: 'text/x-comments' });
-    this.editor.testScenarioModel.data = '[]';
-    bo.flowElements.push(this.editor.testScenarioModel);
-    // bo.extensionElements = bo.extensionElements || bo.$model.create('bpmn:ExtensionElements');
-    // bo.extensionElements.get('values').push(this.editor.testScenarioModel);    
+    this.editor.testScenarioModel.data = '[]';    
+    bo.extensionElements = bo.extensionElements || bo.$model.create('bpmn:ExtensionElements');
+    bo.extensionElements.get('values').push(this.editor.testScenarioModel);    
   } else {
     this.editor.testScenarioModel = bo.extensionElements.get('values').filter((f=>f.$type === 'nukon:TestScenario'))[0];
   }

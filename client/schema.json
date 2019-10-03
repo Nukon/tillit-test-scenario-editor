@@ -20,8 +20,7 @@
             "type": "string",
             "enum":["Message",
               "Form",
-              "SubProcess",
-              "None"]
+              "SubProcess"]
           },
           "key": {
             "title": "Trigger Key",
@@ -44,7 +43,8 @@
                 },
                 "type": {
                   "type":"string",
-                  "title": "Variable Type"
+                  "title": "Variable Type",
+                  "enum": ["json", "string", "long", "date","short","double","boolean"]
                 }
               }
             }
@@ -85,7 +85,8 @@
                   },
                   "type": {
                     "type":"string",
-                    "title": "Variable Type"
+                    "title": "Variable Type",
+                    "enum": ["json", "string", "long", "date","short","double","boolean"]
                   }
                 }
               }
@@ -107,7 +108,8 @@
                     },
                     "type": {
                       "type":"string",
-                      "title": "Variable Type"
+                      "title": "Variable Type",
+                      "enum": ["json", "string", "long", "date","short","double","boolean"]
                     }
                   }
                 }
@@ -133,7 +135,8 @@
             },
             "type": {
               "type":"string",
-              "title": "Variable Type"
+              "title": "Variable Type",
+              "enum": ["json", "string", "long", "date","short","double","boolean"]
             }
           }
         }

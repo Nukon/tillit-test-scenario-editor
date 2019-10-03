@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:nukon="http://nukon.com/schema/bpmn/test-scenarios" id="Definitions_0nfrf2i" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="3.3.5">
+  <bpmn:process id="Process_0wgcs6z" isExecutable="true">
+    <bpmn:startEvent id="StartEvent_1" />
+    <nukon:testScenario textFormat="text/x-comments">[{"scenarioName":"test","processStart":{"type":"Message","key":"","requiredOutputValues":[]},"userTasks":[],"endOfProcessVariables":[]}]</nukon:testScenario>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_0wgcs6z">
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="152" y="82" width="36" height="36" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
