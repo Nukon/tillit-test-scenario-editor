@@ -86,8 +86,7 @@ TestScenarioPluginProvider.prototype.renderJsonEditor = function(element) {
     theme: 'barebones',
     schema: require('./schema.json')
   };
-  
-  debugger;
+   
   var bo = element.businessObject;          
   this.editor = new JSONEditor(jsoneditor_container, options);
   if (bo.extensionElements == null || !bo.extensionElements.get('values').some((f=>f.$type === 'nukon:TestScenario'))) {    
